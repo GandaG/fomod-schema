@@ -231,7 +231,7 @@
         </xs:annotation>
         <xs:attribute name="path" use="required">
             <xs:annotation>
-                <xs:documentation>The path to the image in the FOMOD.</xs:documentation>
+                <xs:documentation>The path to the image in the FOMod.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>
@@ -242,7 +242,7 @@
         </xs:annotation>
         <xs:attribute name="path" use="optional" type="xs:string">
             <xs:annotation>
-                <xs:documentation>The path to the image in the FOMOD. If omitted the FOMOD's screenshot is used.</xs:documentation>
+                <xs:documentation>The path to the image in the FOMod. If omitted the FOMod's screenshot is used.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="showImage" type="xs:boolean" default="true" use="optional">
@@ -427,13 +427,54 @@
         </xs:attribute>
     </xs:complexType>
 
+    <xs:complexType name="stepList">
+        <xs:annotation>
+            <xs:documentation>A list of install steps.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="installStep" type="installStep" minOccurs="1" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>A list of install steps for the mod.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="order" type="orderEnum" use="optional" default="Ascending">
+            <xs:annotation>
+                <xs:documentation>The order by which to list the steps.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="installStep">
+        <xs:annotation>
+            <xs:documentation>A step in the install process containing groups of optional plugins.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="visible" type="compositeDependency" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>The pattern against which to match the conditional flags and installed files. If the pattern is matched, then the install step will be visible.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="optionalFileGroups" type="groupList" minOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>The list of optional files (or plugins) that may optionally be installed for this module.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>The name of the install step.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
     <xs:complexType name="fileSystemItem">
         <xs:annotation>
             <xs:documentation>A file or folder that may be installed as part of a module or plugin.</xs:documentation>
         </xs:annotation>
         <xs:attribute name="source" type="xs:string" use="required">
             <xs:annotation>
-                <xs:documentation>The path to the file or folder in the FOMOD.</xs:documentation>
+                <xs:documentation>The path to the file or folder in the FOMod.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="destination" type="xs:string">
@@ -628,9 +669,9 @@
                     <xs:documentation>The list of files and folders that must be installed for this module.</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="optionalFileGroups" type="groupList" minOccurs="0">
+            <xs:element name="installSteps" type="stepList" minOccurs="0">
                 <xs:annotation>
-                    <xs:documentation>The list of optional files (or plugins) that may optionally be installed for this module.</xs:documentation>
+                    <xs:documentation>The list of install steps that determine which files (or plugins) that may optionally be installed for this module.</xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="conditionalFileInstalls" type="conditionalFileInstallList" minOccurs="0">
