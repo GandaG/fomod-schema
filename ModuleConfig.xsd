@@ -99,9 +99,9 @@
         </xs:attribute>
     </xs:complexType>
 
-    <xs:complexType name="compositeDependency">
+    <xs:group name="dependencyTypesGroup">
         <xs:annotation>
-            <xs:documentation>A dependency that is made up of one or more dependencies.</xs:documentation>
+            <xs:documentation>The group of possible dependencies.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
             <xs:choice maxOccurs="unbounded">
@@ -115,14 +115,9 @@
                         <xs:documentation>Specifies that a condition flag must have a specific value.</xs:documentation>
                     </xs:annotation>
                 </xs:element>
-                <xs:element name="foseDependency" type="versionDependency" minOccurs="0" maxOccurs="1">
+                <xs:element name="gameDependency" type="versionDependency" minOccurs="0" maxOccurs="1">
                     <xs:annotation>
-                        <xs:documentation>Specifies a minimum required version of FOSE.</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element name="falloutDependency" type="versionDependency" minOccurs="0" maxOccurs="1">
-                    <xs:annotation>
-                        <xs:documentation>Specifies a minimum required version of Fallout 3.</xs:documentation>
+                        <xs:documentation>Specifies a minimum required version of the installed game.</xs:documentation>
                     </xs:annotation>
                 </xs:element>
                 <xs:element name="fommDependency" type="versionDependency" minOccurs="0" maxOccurs="1">
@@ -137,6 +132,13 @@
                 </xs:element>
             </xs:choice>
         </xs:sequence>
+    </xs:group>
+    
+    <xs:complexType name="compositeDependency">
+        <xs:annotation>
+            <xs:documentation>A dependency that is made up of one or more dependencies.</xs:documentation>
+        </xs:annotation>
+        <xs:group ref="dependencyTypesGroup"/>
         <xs:attribute name="operator" default="And">
             <xs:annotation>
                 <xs:documentation>The relation of the contained dependencies.</xs:documentation>
