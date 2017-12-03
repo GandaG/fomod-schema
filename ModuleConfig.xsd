@@ -107,12 +107,27 @@
             <xs:choice maxOccurs="unbounded">
                 <xs:element name="fileDependency" type="fileDependency" maxOccurs="unbounded">
                     <xs:annotation>
-                        <xs:documentation>A mod upon which the type of a plugin depends.</xs:documentation>
+                        <xs:documentation>Specifies that a mod must be in a specified state.</xs:documentation>
                     </xs:annotation>
                 </xs:element>
                 <xs:element name="flagDependency" type="flagDependency" maxOccurs="unbounded">
                     <xs:annotation>
-                        <xs:documentation>A condition flag upon which the type of a plugin depends.</xs:documentation>
+                        <xs:documentation>Specifies that a condition flag must have a specific value.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="foseDependency" type="versionDependency" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>Specifies a minimum required version of FOSE.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="falloutDependency" type="versionDependency" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>Specifies a minimum required version of Fallout 3.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="fommDependency" type="versionDependency" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>Specifies a minimum required version of FOMM.</xs:documentation>
                     </xs:annotation>
                 </xs:element>
                 <xs:element name="dependencies" type="compositeDependency">
@@ -221,6 +236,32 @@
         </xs:attribute>
     </xs:complexType>
 
+    <xs:complexType name="headerImage">
+        <xs:annotation>
+            <xs:documentation>An image.</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="path" use="optional" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>The path to the image in the FOMOD. If omitted the FOMOD's screenshot is used.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="showImage" type="xs:boolean" default="true" use="optional">
+            <xs:annotation>
+                <xs:documentation>Whether or not the image should be displayed.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="showFade" type="xs:boolean" default="true" use="optional">
+            <xs:annotation>
+                <xs:documentation>Whether or not the fade effect should be displayed. This value is ignored if showImage is false.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="height" type="xs:int" default="-1" use="optional">
+            <xs:annotation>
+                <xs:documentation>The height to use for the image. Note that there is a minimum height that is enforced based on the user's settings.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
     <xs:complexType name="plugin">
         <xs:annotation>
             <xs:documentation>A plugin.</xs:documentation>
@@ -275,6 +316,29 @@
         </xs:attribute>
     </xs:complexType>
 
+    <xs:simpleType name="orderEnum">
+        <xs:annotation>
+            <xs:documentation>The possible orders of items.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Ascending">
+                <xs:annotation>
+                    <xs:documentation>Indicates the items are to be ordered ascending alphabetically.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Descending">
+                <xs:annotation>
+                    <xs:documentation>Indicates the items are to be ordered descending alphabetically.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Explicit">
+                <xs:annotation>
+                    <xs:documentation>Indicates the items are to be ordered as listed in the configuration file.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:complexType name="pluginList">
         <xs:annotation>
             <xs:documentation>A list of plugins.</xs:documentation>
@@ -286,6 +350,11 @@
                 </xs:annotation>
             </xs:element>
         </xs:sequence>
+        <xs:attribute name="order" type="orderEnum" use="optional" default="Ascending">
+            <xs:annotation>
+                <xs:documentation>The order by which to list the plugins.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="group">
@@ -351,6 +420,11 @@
                 </xs:annotation>
             </xs:element>
         </xs:sequence>
+        <xs:attribute name="order" type="orderEnum" use="optional" default="Ascending">
+            <xs:annotation>
+                <xs:documentation>The order by which to list the groups.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
 
     <xs:complexType name="fileSystemItem">
@@ -432,54 +506,15 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="moduleFileDependency">
+    <xs:complexType name="versionDependency">
         <xs:annotation>
-            <xs:documentation>A file upon which the module depends.</xs:documentation>
-        </xs:annotation>
-        <xs:attribute name="file" type="xs:string" use="required">
-            <xs:annotation>
-                <xs:documentation>The file upon which a the module depends.</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-    </xs:complexType>
-
-    <xs:complexType name="moduleVersionDependency">
-        <xs:annotation>
-            <xs:documentation>A version of an item upon which the module depends.</xs:documentation>
+            <xs:documentation>A required minimum version of an item.</xs:documentation>
         </xs:annotation>
         <xs:attribute name="version" type=" xs:string" use="required">
             <xs:annotation>
-                <xs:documentation>The version of the item upon which the module depends.</xs:documentation>
+                <xs:documentation>The required minimum version of the item.</xs:documentation>
             </xs:annotation>
         </xs:attribute>
-    </xs:complexType>
-
-    <xs:complexType name="moduleDependencyList">
-        <xs:annotation>
-            <xs:documentation>A list of dependencies.</xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="foseDependency" type="moduleVersionDependency" minOccurs="0" maxOccurs="1">
-                <xs:annotation>
-                    <xs:documentation>The version of FOSE upon which the module depends.</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="falloutDependency" type="moduleVersionDependency" minOccurs="0" maxOccurs="1">
-                <xs:annotation>
-                    <xs:documentation>The version of Fallout 3 upon which the module depends.</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="fommDependency" type="moduleVersionDependency" minOccurs="0" maxOccurs="1">
-                <xs:annotation>
-                    <xs:documentation>The version of FOMM upon which the module depends.</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="fileDependency" type="moduleFileDependency" minOccurs="0" maxOccurs="unbounded">
-                <xs:annotation>
-                    <xs:documentation>A file upon which the module depends.</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="conditionalInstallPattern">
@@ -526,17 +561,64 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="moduleTitle">
+        <xs:annotation>
+            <xs:documentation>Describes the display properties of the module title.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="position" use="optional" default="Left">
+                    <xs:annotation>
+                        <xs:documentation>The identifying name of the condition flag.</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:annotation>
+                            <xs:documentation>The possible title positions.</xs:documentation>
+                        </xs:annotation>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="Left">
+                                <xs:annotation>
+                                    <xs:documentation>Positions the title on the left side of the form header.</xs:documentation>
+                                </xs:annotation>
+                            </xs:enumeration>
+                            <xs:enumeration value="Right">
+                                <xs:annotation>
+                                    <xs:documentation>Positions the title on the right side of the form header.</xs:documentation>
+                                </xs:annotation>
+                            </xs:enumeration>
+                            <xs:enumeration value="RightOfImage">
+                                <xs:annotation>
+                                    <xs:documentation>Positions the title on the right side of the image in the form header.</xs:documentation>
+                                </xs:annotation>
+                            </xs:enumeration>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="colour" use="optional" default="000000" type="xs:hexBinary">
+                    <xs:annotation>
+                        <xs:documentation>The colour to use for the title.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
     <xs:complexType name="moduleConfiguration">
         <xs:annotation>
             <xs:documentation>Describes the configuration of a module.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="moduleName" type="xs:string">
+            <xs:element name="moduleName" type="moduleTitle">
                 <xs:annotation>
                     <xs:documentation>The name of the module.</xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="moduleDependencies" type="moduleDependencyList" minOccurs="0">
+            <xs:element name="moduleImage" type="headerImage" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>The module logo.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="moduleDependencies" type="compositeDependency" minOccurs="0">
                 <xs:annotation>
                     <xs:documentation>Items upon which the module depends.</xs:documentation>
                 </xs:annotation>
