@@ -1,0 +1,20 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="fomod">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="Name"/>
+        <xs:element type="xs:string" name="Author"/>
+        <xs:element type="xs:string" name="Version"/>
+        <xs:element type="xs:string" name="Website"/>
+        <xs:element type="xs:string" name="Description"/>
+        <xs:element name="Groups">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="element"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
